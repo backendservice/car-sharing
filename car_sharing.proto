@@ -24,7 +24,7 @@ message RegisterCarRequest {
     string OwnerName = 1;
     string Model = 2;
     string Place = 3;
-    string StartDate = 4;
+    string StartDate = 4; // 'YYYYMMDDHH'
     string EndDate = 5;
 }
 
@@ -46,12 +46,15 @@ message SearchCarsRequest {
 //response
 message SearchCarsReply {
     string Status = 1;
-    repeated SearchCarsResult Cars = 2;
+    repeated string CarIds = 2;
+    //repeated SearchCarsResult Cars = 2;
 }
 
+/*
 message SearchCarsResult {
      string CarId = 1;
 }
+*/
 
 message UseCarRequest {
     string CarId = 1;

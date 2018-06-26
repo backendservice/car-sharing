@@ -1,7 +1,7 @@
 package main
 
 import ( // 패키지 디렉토리
-	"fmt"
+
 	"log"
 	"net"
 	"strconv"
@@ -42,13 +42,35 @@ type server struct{}
 func (s *server) RegisterCar(ctx context.Context, in *CarSharing.RegisterCarRequest) (*CarSharing.RegisterCarReply, error) {
 	aCar := car{ID: carID, OwnerName: in.OwnerName, Model: in.Model, Place: in.Place, StartDate: in.StartDate, EndDate: in.EndDate}
 	cars[carID] = aCar
-	str := fmt.Sprintf("%d", carID)
+	//str := fmt.Sprintf("%d", carID)
+	str := strconv.Itoa(carID)
 	carID++ // 증가하는 유일한 값
 	return &CarSharing.RegisterCarReply{Status: "Success", CarId: str}, nil
 }
 
 func (s *server) SearchCars(ctx context.Context, in *CarSharing.SearchCarsRequest) (*CarSharing.SearchCarsReply, error) {
-	return &CarSharing.SearchCarsReply{Status: "Success"}, nil //CarId: "Any"}, nil
+	//search cars for meeting Place, StartData, EndDate
+	//var Cars []*SearchCarsResult
+	//a := make([]int, 5) // len(a)=5
+	myCarIds := make([]string, 50)
+	for _, aCar := range cars {
+		if aCar.Place == in.Place {
+			if aCar.ServiceStartDate <= in.StartDate && in.EndDate <= aCar.ServiceEndDate {
+				if !aCar.InUse || aCar.EndDate < in.StartDate {
+					// found a car, add a car to pointer array of cars
+					//rslt := new(SearchCarsResult)
+					//rslt.CarId = strconv.Itoa(aCar.ID)
+					str := strconv.Itoa(aCar.ID)
+					myCarIds = append(myCarIds, str)
+				}
+			}
+		}
+	}
+	if len(myCarIds) > 0 {
+		return &CarSharing.SearchCarsReply{Status: "Success", CarIds: myCarIds}, nil //CarId: "Any"}, nil
+	} else {
+		return &CarSharing.SearchCarsReply{Status: "Fail"}, nil //CarId: "Any"}, nil
+	}
 }
 
 func (s *server) UseCar(ctx context.Context, in *CarSharing.UseCarRequest) (*CarSharing.UseCarReply, error) {
@@ -118,7 +140,7 @@ type car struct {
 	ServiceEndDate   string // 서비스 종료일
 	InUse            bool   // 임대중인지, "True" or "False"
 	UserName         string // 임대인 이름
-	StartDate        string // 'YYYYMMDD' 임대 시작일
+	StartDate        string // 'YYYYMMDDHH' 임대 시작일
 	EndDate          string // 임대 종료일
 }
 
