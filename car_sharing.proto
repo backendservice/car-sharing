@@ -1,0 +1,49 @@
+//car_sharing.proto
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+option java_package = "com.github.backendservice.helloworld";
+
+option java_outer_classname = "CarSharingProto";
+
+package HelloWorld;
+
+// greeting service
+
+service CarSharing {
+    rpc RegisterCar (RegisterCarRequest) returns (RegisterCarReply) {}
+    rpc SearchCars (SearchCarsRequest) returns (SearchCarsReply) {}
+    rpc UseCar (UseCarRequest) returns (UseCarReply) {}
+    rpc ReturnCar (ReturnCarRequest) returns (ReturnCarReply) {}
+}
+
+//request
+message RegisterCarRequest {
+    string owner_name = 1;
+    string car_model = 2;
+    string car_place = 3;
+    string start_day = 4;
+    string end_day = 5;
+}
+
+//response
+message RegisterCarReply {
+    string register_status = 1;
+    string car_id = 2;
+}
+
+//request
+message SearchCarsRequest {
+    string car_model = 1;
+    string car_place = 2;
+    string start_day = 3;
+    string end_day = 4;
+}
+
+//response
+message SearchCarsReply {
+    string register_status = 1;
+    string car_id = 2;
+}
