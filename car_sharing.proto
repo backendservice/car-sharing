@@ -60,6 +60,7 @@ message UseCarRequest {
 
 message UseCarReply {
     string Status = 1;
+    string CarId = 2;
 }
 
 message ReturnCarRequest {
