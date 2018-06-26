@@ -65,7 +65,8 @@ message UseCarReply {
 message ReturnCarRequest {
     string UserName = 1;
     string CarId = 2;
-    string ReturnDate = 3;
+    string Place = 3;
+    string ReturnDate = 4;
 }
 
 message ReturnCarReply {
