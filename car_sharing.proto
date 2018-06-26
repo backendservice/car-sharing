@@ -22,7 +22,7 @@ service CarSharing {
 //request
 message RegisterCarRequest {
     string OwnerName = 1;
-    string CarModel = 2;
+    string Model = 2;
     string Place = 3;
     string StartDate = 4;
     string EndDate = 5;
@@ -37,7 +37,7 @@ message RegisterCarReply {
 //request
 message SearchCarsRequest {
     string UserName = 1;
-    string CarModel = 2;
+    string Model = 2;
     string Place = 3;
     string StartDate = 4;
     string EndDate = 5;
@@ -55,7 +55,7 @@ message SearchCarsResult {
 
 message UseCarRequest {
     string UserName = 1;
-    string CarModel = 2;
+    string Model = 2;
     string PickupPlace = 3;
     string DropPlace = 4;
     string StartDate = 5;
