@@ -4,11 +4,11 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 
-option java_package = "com.github.backendservice.helloworld";
+option java_package = "com.github.backendservice.CarSharing";
 
 option java_outer_classname = "CarSharingProto";
 
-package HelloWorld;
+package CarSharing;
 
 // greeting service
 
@@ -21,51 +21,53 @@ service CarSharing {
 
 //request
 message RegisterCarRequest {
-    string owner_name = 1;
-    string car_model = 2;
-    string car_place = 3;
-    string start_day = 4;
-    string end_day = 5;
+    string OwnerName = 1;
+    string CarModel = 2;
+    string Place = 3;
+    string StartDate = 4;
+    string EndDate = 5;
 }
 
 //response
 message RegisterCarReply {
-    string status = 1;
-    string car_id = 2;
+    string Status = 1;
+    string CarId = 2;
 }
 
 //request
 message SearchCarsRequest {
-    string user_name = 1;
-    string car_model = 2;
-    string car_place = 3;
-    string start_day = 4;
-    string end_day = 5;
+    string UserName = 1;
+    string CarModel = 2;
+    string Place = 3;
+    string StartDate = 4;
+    string EndDate = 5;
 }
 
 //response
 message SearchCarsReply {
-    string status = 1;
-    string car_id = 2;
+    string Status = 1;
+    string CarId = 2;
 }
 
 message UseCarRequest {
-    string user_name = 1;
-    string car_model = 2;
-    string pickup_place = 3;
-    string start_day = 4;
-    string end_day = 5;
+    string UserName = 1;
+    string CarModel = 2;
+    string PickupPlace = 3;
+    string DropPlace = 4;
+    string StartDate = 5;
+    string EndDate = 6;
 }
 
 message UseCarReply {
-    string status = 1;
+    string Status = 1;
 }
 
 message ReturnCarRequest {
-    string user_name = 1;
-    string return_day = 2;
+    string UserName = 1;
+    string CarId = 2;
+    string ReturnDate = 3;
 }
 
 message ReturnCarReply {
-    string status = 1;
+    string Status = 1;
 }
