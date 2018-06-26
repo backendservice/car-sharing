@@ -10,7 +10,7 @@ option java_outer_classname = "CarSharingProto";
 
 package CarSharing;
 
-// greeting service
+// car sharing service
 
 service CarSharing {
     rpc RegisterCar (RegisterCarRequest) returns (RegisterCarReply) {}
@@ -46,7 +46,11 @@ message SearchCarsRequest {
 //response
 message SearchCarsReply {
     string Status = 1;
-    string CarId = 2;
+    repeated SearchCarsResult Cars = 2;
+}
+
+message SearchCarsResult {
+     string CarId = 1;
 }
 
 message UseCarRequest {
