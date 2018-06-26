@@ -54,12 +54,13 @@ message SearchCarsResult {
 }
 
 message UseCarRequest {
-    string UserName = 1;
-    string Model = 2;
-    string PickupPlace = 3;
-    string DropPlace = 4;
-    string StartDate = 5;
-    string EndDate = 6;
+    string CarId = 1;
+    string UserName = 2;
+    string Model = 3;
+    string PickupPlace = 4;
+    string DropPlace = 5;
+    string StartDate = 6;
+    string EndDate = 7;
 }
 
 message UseCarReply {
@@ -68,8 +69,8 @@ message UseCarReply {
 }
 
 message ReturnCarRequest {
-    string UserName = 1;
-    string CarId = 2;
+    string CarId = 1;
+    string UserName = 2;
     string Place = 3;
     string ReturnDate = 4;
 }

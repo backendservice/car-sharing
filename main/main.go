@@ -4,6 +4,7 @@ import ( // 패키지 디렉토리
 	"fmt"
 	"log"
 	"net"
+	"strconv"
 
 	"github.com/backendservice/car-sharing"
 	"golang.org/x/net/context"
@@ -42,6 +43,7 @@ func (s *server) RegisterCar(ctx context.Context, in *CarSharing.RegisterCarRequ
 	aCar := car{ID: carID, OwnerName: in.OwnerName, Model: in.Model, Place: in.Place, StartDate: in.StartDate, EndDate: in.EndDate}
 	cars[carID] = aCar
 	str := fmt.Sprintf("%d", carID)
+	carID++ // 증가하는 유일한 값
 	return &CarSharing.RegisterCarReply{Status: "Success", CarId: str}, nil
 }
 
@@ -50,11 +52,35 @@ func (s *server) SearchCars(ctx context.Context, in *CarSharing.SearchCarsReques
 }
 
 func (s *server) UseCar(ctx context.Context, in *CarSharing.UseCarRequest) (*CarSharing.UseCarReply, error) {
-	return &CarSharing.UseCarReply{Status: "Success", CarId: "Any"}, nil
+	id, _ := strconv.Atoi(in.CarId)
+	aCar, exists := cars[id]
+	if !exists {
+		return &CarSharing.UseCarReply{Status: "Fail", CarId: "Any"}, nil
+	} else if aCar.InUse == true {
+		return &CarSharing.UseCarReply{Status: "Fail", CarId: "Any"}, nil
+	} else {
+		aCar.InUse = true
+		aCar.UserName = in.UserName
+		aCar.StartDate = in.StartDate
+		aCar.EndDate = in.EndDate
+		return &CarSharing.UseCarReply{Status: "Success", CarId: "Any"}, nil
+	}
 }
 
 func (s *server) ReturnCar(ctx context.Context, in *CarSharing.ReturnCarRequest) (*CarSharing.ReturnCarReply, error) {
-	return &CarSharing.ReturnCarReply{Status: "Success"}, nil
+	id, _ := strconv.Atoi(in.CarId)
+	aCar, exists := cars[id]
+	if !exists {
+		return &CarSharing.ReturnCarReply{Status: "Fail"}, nil
+	} else if aCar.InUse == false {
+		return &CarSharing.ReturnCarReply{Status: "Fail"}, nil
+	} else {
+		aCar.InUse = false
+		aCar.UserName = ""
+		aCar.StartDate = ""
+		aCar.EndDate = ""
+		return &CarSharing.ReturnCarReply{Status: "Success"}, nil
+	}
 }
 
 func main() {
@@ -84,15 +110,17 @@ func main() {
 
 // car type
 type car struct {
-	ID        int32  // generated number string
-	OwnerName string // 소유자 이름
-	Model     string // model name
-	Place     string // 장소 or "InUse" 장소를 이용하여 사용중인지 판단
-	//InUse bool // "True" or "False"
-	UserName  string // 임대인 이름
-	StartDate string // 'YYYYMMDD' 임대중
-	EndDate   string
+	ID               int    // generated number string
+	OwnerName        string // 소유자 이름
+	Model            string // model name
+	Place            string // 장소
+	ServiceStartDate string // 서비스 시작일
+	ServiceEndDate   string // 서비스 종료일
+	InUse            bool   // 임대중인지, "True" or "False"
+	UserName         string // 임대인 이름
+	StartDate        string // 'YYYYMMDD' 임대 시작일
+	EndDate          string // 임대 종료일
 }
 
-var cars map[int32]car
-var carID = int32(0)
+var cars map[int]car
+var carID = int(0) // 증가하는 유일한 값
