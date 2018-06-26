@@ -30,7 +30,7 @@ message RegisterCarRequest {
 
 //response
 message RegisterCarReply {
-    string register_status = 1;
+    string status = 1;
     string car_id = 2;
 }
 
@@ -45,7 +45,7 @@ message SearchCarsRequest {
 
 //response
 message SearchCarsReply {
-    string register_status = 1;
+    string status = 1;
     string car_id = 2;
 }
 
@@ -58,7 +58,7 @@ message UseCarRequest {
 }
 
 message UseCarReply {
-    string use_car_status = 1;
+    string status = 1;
 }
 
 message ReturnCarRequest {
@@ -67,5 +67,5 @@ message ReturnCarRequest {
 }
 
 message ReturnCarReply {
-    string return_car_status = 1;
+    string status = 1;
 }
