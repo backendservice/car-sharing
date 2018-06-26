@@ -36,6 +36,7 @@ message RegisterCarReply {
 
 //request
 message SearchCarsRequest {
+    string user_name = 1;
     string car_model = 1;
     string car_place = 2;
     string start_day = 3;
@@ -49,17 +50,22 @@ message SearchCarsReply {
 }
 
 message UseCarRequest {
-
+    string user_name = 1;
+    string car_model = 2;
+    string pickup_place = 3;
+    string start_day = 4;
+    string end_day = 5;
 }
 
 message UseCarReply {
-
+    string use_car_status = 1;
 }
 
 message ReturnCarRequest {
-
+    string user_name = 1;
+    string return_day = 2;
 }
 
 message ReturnCarReply {
-    
+    string return_car_status = 1;
 }
