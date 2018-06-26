@@ -47,3 +47,19 @@ message SearchCarsReply {
     string register_status = 1;
     string car_id = 2;
 }
+
+message UseCarRequest {
+
+}
+
+message UseCarReply {
+
+}
+
+message ReturnCarRequest {
+
+}
+
+message ReturnCarReply {
+    
+}
