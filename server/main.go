@@ -42,7 +42,7 @@ type server struct{}
 // RegisterCar implements CarSharing.CarSharingServer
 func (s *server) RegisterCar(ctx context.Context, in *CarSharing.RegisterCarRequest) (*CarSharing.RegisterCarReply, error) {
 	fmt.Printf("RegisterCar: owner %s, model %s, place %s\n", in.OwnerName, in.Model, in.Place)
-	aCar := car{ID: carID, OwnerName: in.OwnerName, Model: in.Model, Place: in.Place, StartDate: in.StartDate, EndDate: in.EndDate}
+	aCar := car{ID: carID, InUse: false, OwnerName: in.OwnerName, Model: in.Model, Place: in.Place, ServiceStartDate: in.StartDate, ServiceEndDate: in.EndDate}
 	cars[carID] = aCar
 	//str := fmt.Sprintf("%d", carID)
 	str := strconv.Itoa(carID)
@@ -55,12 +55,17 @@ func (s *server) SearchCars(ctx context.Context, in *CarSharing.SearchCarsReques
 	//var Cars []*SearchCarsResult
 	//a := make([]int, 5) // len(a)=5
 	//myCarIds := make([]string, 50)
+	fmt.Printf("SearchCars: place %s, date %s - %s\n", in.Place, in.StartDate, in.EndDate)
 	rsltCars := []*CarSharing.SearchCarsResult{}
 	for _, aCar := range cars {
-		if aCar.Place == in.Place || aCar.Place == "Any" {
+		fmt.Printf("SearchCars: checking a car, owner %s, model %s\n", aCar.OwnerName, aCar.Model)
+		if aCar.Place == in.Place || in.Place == "Any" {
+			fmt.Printf("SearchCars: place is ok!, date %s - %s\n", aCar.ServiceStartDate, aCar.ServiceEndDate)
 			if aCar.ServiceStartDate <= in.StartDate && in.EndDate <= aCar.ServiceEndDate {
+				fmt.Printf("SearchCars: dates are ok!\n")
 				if !aCar.InUse || aCar.EndDate < in.StartDate {
 					// found a car, add a car to pointer array of cars
+					fmt.Printf("SearchCars: adding a car\n")
 					rslt := &CarSharing.SearchCarsResult{}
 					rsltCars = append(rsltCars, rslt)
 				}
