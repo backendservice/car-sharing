@@ -60,22 +60,21 @@ func (s *server) SearchCars(ctx context.Context, in *CarSharing.SearchCarsReques
 	for _, aCar := range cars {
 		fmt.Printf("SearchCars: checking a car, owner %s, model %s\n", aCar.OwnerName, aCar.Model)
 		if aCar.Place == in.Place || in.Place == "Any" {
-			fmt.Printf("SearchCars: place is ok!, date %s - %s\n", aCar.ServiceStartDate, aCar.ServiceEndDate)
 			if aCar.ServiceStartDate <= in.StartDate && in.EndDate <= aCar.ServiceEndDate {
-				fmt.Printf("SearchCars: dates are ok!\n")
+				fmt.Printf("SearchCars: place & dates are ok!,  date %s - %s\n", aCar.ServiceStartDate, aCar.ServiceEndDate)
 				if !aCar.InUse || aCar.EndDate < in.StartDate {
 					// found a car, add a car to pointer array of cars
 					fmt.Printf("SearchCars: adding a car\n")
-					rslt := &CarSharing.SearchCarsResult{}
+					rslt := &CarSharing.SearchCarsResult{CarId: strconv.Itoa(aCar.ID), Model: aCar.Model, Place: aCar.Place, ServiceStartDate: aCar.ServiceStartDate, ServiceEndDate: aCar.ServiceEndDate}
 					rsltCars = append(rsltCars, rslt)
 				}
 			}
 		}
 	}
 	if len(rsltCars) > 0 {
-		return &CarSharing.SearchCarsReply{Status: "Success", Cars: rsltCars}, nil //CarId: "Any"}, nil
+		return &CarSharing.SearchCarsReply{Status: "Success", Cars: rsltCars}, nil
 	} else {
-		return &CarSharing.SearchCarsReply{Status: "Fail"}, nil //CarId: "Any"}, nil
+		return &CarSharing.SearchCarsReply{Status: "Fail"}, nil
 	}
 }
 
