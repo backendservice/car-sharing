@@ -46,15 +46,17 @@ message SearchCarsRequest {
 //response
 message SearchCarsReply {
     string Status = 1;
-    repeated string CarIds = 2;
-    //repeated SearchCarsResult Cars = 2;
+    //repeated string CarIds = 2;
+    repeated SearchCarsResult Cars = 2;
 }
 
-/*
 message SearchCarsResult {
-     string CarId = 1;
+    string CarId = 1;
+    string Model = 2;
+    string Place = 3;
+    string ServiceStartDate = 4;
+    string ServiceEndDate = 5;
 }
-*/
 
 message UseCarRequest {
     string CarId = 1;

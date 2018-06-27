@@ -2,6 +2,7 @@ package main
 
 import ( // 패키지 디렉토리
 
+	"fmt"
 	"log"
 	"net"
 	"strconv"
@@ -40,6 +41,7 @@ type server struct{}
 
 // RegisterCar implements CarSharing.CarSharingServer
 func (s *server) RegisterCar(ctx context.Context, in *CarSharing.RegisterCarRequest) (*CarSharing.RegisterCarReply, error) {
+	fmt.Printf("RegisterCar: owner %s, model %s, place %s\n", in.OwnerName, in.Model, in.Place)
 	aCar := car{ID: carID, OwnerName: in.OwnerName, Model: in.Model, Place: in.Place, StartDate: in.StartDate, EndDate: in.EndDate}
 	cars[carID] = aCar
 	//str := fmt.Sprintf("%d", carID)
@@ -52,22 +54,21 @@ func (s *server) SearchCars(ctx context.Context, in *CarSharing.SearchCarsReques
 	//search cars for meeting Place, StartData, EndDate
 	//var Cars []*SearchCarsResult
 	//a := make([]int, 5) // len(a)=5
-	myCarIds := make([]string, 50)
+	//myCarIds := make([]string, 50)
+	rsltCars := []*CarSharing.SearchCarsResult{}
 	for _, aCar := range cars {
-		if aCar.Place == in.Place {
+		if aCar.Place == in.Place || aCar.Place == "Any" {
 			if aCar.ServiceStartDate <= in.StartDate && in.EndDate <= aCar.ServiceEndDate {
 				if !aCar.InUse || aCar.EndDate < in.StartDate {
 					// found a car, add a car to pointer array of cars
-					//rslt := new(SearchCarsResult)
-					//rslt.CarId = strconv.Itoa(aCar.ID)
-					str := strconv.Itoa(aCar.ID)
-					myCarIds = append(myCarIds, str)
+					rslt := &CarSharing.SearchCarsResult{}
+					rsltCars = append(rsltCars, rslt)
 				}
 			}
 		}
 	}
-	if len(myCarIds) > 0 {
-		return &CarSharing.SearchCarsReply{Status: "Success", CarIds: myCarIds}, nil //CarId: "Any"}, nil
+	if len(rsltCars) > 0 {
+		return &CarSharing.SearchCarsReply{Status: "Success", Cars: rsltCars}, nil //CarId: "Any"}, nil
 	} else {
 		return &CarSharing.SearchCarsReply{Status: "Fail"}, nil //CarId: "Any"}, nil
 	}
@@ -110,6 +111,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	fmt.Println("CarSharing service started")
 	s := grpc.NewServer()
 	CarSharing.RegisterCarSharingServer(s, &server{})
 	// Register reflection service on gRPC server.
@@ -144,5 +146,5 @@ type car struct {
 	EndDate          string // 임대 종료일
 }
 
-var cars map[int]car
+var cars = map[int]car{}
 var carID = int(0) // 증가하는 유일한 값
